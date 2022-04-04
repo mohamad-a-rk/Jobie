@@ -85,7 +85,8 @@ const GeneralSchema = new mongoose.Schema({
     }],
     specilization: {
         required: true,
-        type: String
+        type: String,
+        minlength: 2
     },
 
     tokens: [{

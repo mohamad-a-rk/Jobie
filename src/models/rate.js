@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const RateSchema = new mongoose.Schema({
     Text: {
-        type: number,
+        type: Number,
     },
     rater: {
         type: mongoose.SchemaTypes.ObjectId,

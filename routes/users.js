@@ -66,7 +66,8 @@ app.post('/users/login', async (req, res) => {
   }
 })
 
-app.get('/users', async (req, res) => { // Get all users
+app.get('/users', async (req, res) => { // Get all users 
+  // No need for this
 
   try {
     let value = await User.find({})
@@ -108,7 +109,7 @@ app.post('/users/logout', auth, async (req, res) => {
 app.patch('/users/me', auth, async (req, res) => { // Update user data
   // const _id = req.params.id
   const updates = Object.keys(req.body)
-  const allowedChanges = ['email', 'name', 'password']
+  const allowedChanges = ['email', 'name', 'password', 'bio', 'prevJobs', 'specilization', 'location', 'phone']
   let isValidOpreation = updates.every((update) => allowedChanges.includes(update))
   if (!isValidOpreation) {
     return res.status(400).send()
