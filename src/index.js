@@ -10,7 +10,7 @@ const Feedback = require('./models/feedback')
 
 const app = express()
 
-app.user(userRouter)
+app.use(userRouter)
 app.use(express.json())
 const port = process.env.PORT
 
