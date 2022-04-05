@@ -19,17 +19,17 @@ app.listen(port, () => {
 })
 
 // const test = async () => {
-//     // let e = new Business({
-//     //     email: "Mohammad.kukhun@gmail.com",
-//     //     name: "Mohammad Kukhun",
-//     //     password: "12345677890",
-//     //     specilization: 'Backend',
-//     //     location: {
-//     //         city: 'Nablus',
-//     //         country: 'Palestine'
-//     //     },
-//     //     // gender: 'Male'
-//     // })
+    // let e = new Business({
+    //     email: "Mohammad.kukhun@gmail.com",
+    //     name: "Mohammad Kukhun",
+    //     password: "12345677890",
+    //     specilization: 'Backend',
+    //     location: {
+    //         city: 'Nablus',
+    //         country: 'Palestine'
+    //     },
+    //     // gender: 'Male'
+    // })
 //     // let value = await e.save()
 //     // let freelancer = await FreeLancer.findOne({
 //     //     email: 'Mohammad.kukhun1@gmail.com'

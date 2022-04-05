@@ -25,5 +25,10 @@ BusinessSchema.virtual('rates', {
     foreignField: 'rater'
 })
 
+BusinessSchema.virtual('forms', {
+    ref: 'Form',
+    localField: '_id',
+    foreignField: 'owner'
+})
 const Business = general.discriminator('Business', BusinessSchema)
 module.exports = Business

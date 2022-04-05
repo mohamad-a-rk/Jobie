@@ -41,7 +41,8 @@ app.post('/users', async (req, res) => { //insert a new user
     res.send({ value, token })
     sendEmail.sendWelcomeMassege(user.email, user.name)
   } catch (e) {
-    res.status(500).send(e)
+    res.status(500).send()
+    console.log(e);
   }
 })
 
@@ -66,6 +67,7 @@ app.post('/users/login', async (req, res) => {
   }
 })
 
+/***************************************************************
 app.get('/users', async (req, res) => { // Get all users 
   // No need for this
 
@@ -80,7 +82,7 @@ app.get('/users', async (req, res) => { // Get all users
 app.get('/users/me', auth, async (req, res) => {
   res.send(req.user)
 })
-
+****************************************************************/
 app.post('/users/logout', auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
@@ -93,19 +95,19 @@ app.post('/users/logout', auth, async (req, res) => {
     res.status(500).send()
   }
 })
-//*************************************************************************************** */
-// app.get('/users/:id', async (req, res) => { //  Get a certen user
-//     const _id = req.params.id
-//     User.findById(_id).then((value) => {
-//         if (!value) {
-//             return res.status(404).send()
-//         }
-//         res.send(value)
-//     }).catch((error) => {
-//         res.status(500).send(error)
-//     })
-// })
-//****************************************************************************************** */
+
+app.get('/users/:id', async (req, res) => { //  Get a certen user
+  const _id = req.params.id
+  User.findById(_id).then((value) => {
+    if (!value) {
+      return res.status(404).send()
+    }
+    res.send(value)
+  }).catch((error) => {
+    res.status(500).send(error)
+  })
+})
+
 app.patch('/users/me', auth, async (req, res) => { // Update user data
   // const _id = req.params.id
   const updates = Object.keys(req.body)
