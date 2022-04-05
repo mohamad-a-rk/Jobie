@@ -48,43 +48,32 @@ const GeneralSchema = new mongoose.Schema({
         job: {
             companyName: {
                 type: String,
-                trim: true,
-                required: true
+                trim: true
             },
             duration: {
                 start: {
-                    type: Date,
-                    required: true
+                    type: Date
                 },
                 end: {
-                    type: Date,
-                    required: true
+                    type: Date
                 }
             },
             location: {
                 city: {
-                    required: true,
                     type: String
                 },
                 country: {
-                    required: true,
                     type: String
                 },
             },
             position: {
                 type: String,
                 trim: true,
-                required: true
-            },
-            place: {
-                type: String,
-                trim: true
             },
 
         }
     }],
     specilization: {
-        required: true,
         type: String,
         minlength: 2
     },
@@ -97,11 +86,9 @@ const GeneralSchema = new mongoose.Schema({
     }],
     location: {
         city: {
-            required: true,
             type: String
         },
         country: {
-            required: true,
             type: String
         }
     },
@@ -117,6 +104,7 @@ const GeneralSchema = new mongoose.Schema({
     }]
 
 }, { discriminatorKey: 'userType' })
+
 GeneralSchema.pre('save', async function (next) {
     if (this.isModified('password')) {
         this.password = await bcrypt.hash(this.password, 8)

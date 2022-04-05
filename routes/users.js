@@ -24,7 +24,8 @@ let upload = multer({
   }
 })
 
-app.post('/users', async (req, res) => { //insert a new user
+app.post('/users', async (req, res) => {
+  console.log(req.body)//insert a new user
   let user = undefined
   if (req.body.userType == 'Business') {
     user = new Business(req.body)
@@ -38,6 +39,9 @@ app.post('/users', async (req, res) => { //insert a new user
   try {
     let value = await user.save()
     let token = await user.generateAuthToken()
+    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    // res.setHeader('Access-Control-Allow-Credentials', true);
+
     res.send({ value, token })
     sendEmail.sendWelcomeMassege(user.email, user.name)
   } catch (e) {
@@ -67,7 +71,6 @@ app.post('/users/login', async (req, res) => {
   }
 })
 
-/***************************************************************
 app.get('/users', async (req, res) => { // Get all users 
   // No need for this
 
@@ -82,7 +85,6 @@ app.get('/users', async (req, res) => { // Get all users
 app.get('/users/me', auth, async (req, res) => {
   res.send(req.user)
 })
-****************************************************************/
 app.post('/users/logout', auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {

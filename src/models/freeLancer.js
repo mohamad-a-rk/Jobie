@@ -28,6 +28,7 @@ const FreeLancerSchema = new mongoose.Schema({
 }, { discriminatorKey: 'userType' })
 
 // FreeLancerSchema.virtual('feedbacks', {
+// BusinessSchema.virtual('feedbacks', {
 //     ref: 'Feedback',
 //     localField: '_id',
 //     foreignField: 'freelancer'
