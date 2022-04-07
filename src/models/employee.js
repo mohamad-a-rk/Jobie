@@ -5,7 +5,7 @@ const general = require('./general')
 const EmployeeSchema = new mongoose.Schema({
     gender: {
         type: String,
-        required: true,
+        // required: true,
         trim: true,
     },
     dayOfBirth: {
