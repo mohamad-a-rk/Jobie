@@ -51,7 +51,7 @@ const ResponseSchema = new mongoose.Schema({
             }
         }
     }],
-    specilization: {
+    specialization: {
         required: true,
         type: String
     },

@@ -8,6 +8,7 @@ const auth = require('../src/middleware/auth')
 const multer = require('multer')
 const sharp = require('sharp')
 const sendEmail = require('../src/emails/account')
+const { response } = require('express')
 
 const app = express.Router()
 app.use(express.json())
@@ -18,7 +19,7 @@ let upload = multer({
   },
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-      return cb(new Error('You must uplode a jpg/jpeg files only'))
+      return cb(new Error('You must upload a jpg/jpeg files only'))
     }
     cb(undefined, true)
   }
@@ -82,6 +83,7 @@ app.get('/users', async (req, res) => { // Get all users
 app.get('/users/me', auth, async (req, res) => {
   res.send(req.user)
 })
+
 app.post('/users/logout', auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
@@ -95,7 +97,42 @@ app.post('/users/logout', auth, async (req, res) => {
   }
 })
 
-app.get('/users/:id', async (req, res) => { //  Get a certen user
+// app.post('/users/logout', auth, async (req, res) => {
+//   const _id = req.body.user._id;
+//   console.log(req.body)
+//   User.findById(_id).then((user) => {
+//     if (!user) {
+//       return res.status(404).send()
+//     }
+//     // res.send();
+//     // console.log(user.tokens[0].token)
+//     user.tokens.forEach( t => {
+//       t.token = '';
+//     }) 
+//     //  [{ token: '', _id:  }];
+//   return user.save();
+//   // res.send();
+//   // res.send(user)
+// })
+//   .then((re) => {
+//     res.send()
+//   })
+//   .catch((error) => {
+//     console.log(error)
+//     res.status(500).send(error)
+//   })
+//   // try {
+//   //   req.user.tokens = req.user.tokens.filter((token) => {
+//   //     token.token !== req.token
+//   //   })
+//   //   await req.user.save()
+//   //   res.send()
+//   // } catch (e) {
+//   //   res.status(500).send()
+//   // }
+// })
+
+app.get('/users/:id', async (req, res) => { //  Get a certain user
   const _id = req.params.id
   User.findById(_id).then((value) => {
     if (!value) {
@@ -110,16 +147,23 @@ app.get('/users/:id', async (req, res) => { //  Get a certen user
 app.patch('/users/me', auth, async (req, res) => { // Update user data
   // const _id = req.params.id
   const updates = Object.keys(req.body)
-  const allowedChanges = ['email', 'name', 'password', 'bio', 'prevJobs', 'specilization', 'location', 'phone', 'gender']
-  let isValidOpreation = updates.every((update) => allowedChanges.includes(update))
-  if (!isValidOpreation) {
+  const allowedChanges = ['email', 'name', 'gender', 'bio', 'prevJobs', 'specialization', 'location', 'phone']
+  let isValidOperation = updates.every((update) => allowedChanges.includes(update))
+  if (!isValidOperation) {
     return res.status(400).send()
   }
   try {
     // let user = await User.findByIdAndUpdate(_id, req.body, { runValidators: true, new: true })
     // let user = await User.findById(_id)
-    updates.forEach((update) => req.user[update] = req.body[update])
-    await req.user.save()
+    updates.forEach((update) => {
+
+      // if (update === 'gender') {
+      //  Employee.updateOne({ _id: req.user._id }, { $set: { gender: req.body[update] } });
+      // } else {
+      req.user[update] = req.body[update]
+      // }
+    });
+    await req.user.save();
     // if (!user) {
     //     return res.status(404).send()
     // }
@@ -146,10 +190,14 @@ app.delete('/users/me', auth, async (req, res) => {
 
 app.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
   let buffer = await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }).toBuffer()
-  req.user.avatar = buffer;
+  // console.log(buffer)
+
+  req.user.image = buffer;
   await req.user.save()
-  res.send()
+  console.log(req.user.image)
+  res.send(req.user.image)
 }, (error, req, res, next) => {
+  // console.log(error)
   res.status(400).send({ error: 'Please upload a valid image' })
 })
 
@@ -161,7 +209,7 @@ app.delete('/users/me/avatar', auth, async (req, res) => {
   res.status(400).send({ error: 'Please upload a valid image' })
 })
 
-app.get('/users/:id/avatar', async (req, res) => { //  Get a certen user
+app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
   try {
     const _id = req.params.id
     let user = await User.findById(_id)

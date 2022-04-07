@@ -73,14 +73,13 @@ const GeneralSchema = new mongoose.Schema({
 
         }
     }],
-    specilization: {
+    specialization: {
         type: String,
         minlength: 2
     },
 
     tokens: [{
         token: {
-            required: true,
             type: String
         }
     }],
@@ -93,13 +92,14 @@ const GeneralSchema = new mongoose.Schema({
         }
     },
     phone: [{
-        phoneNum: {
-            type: {
-                type: String
-            },
-            number: {
-                type: String
-            }
+        _id: {
+            type: Number
+        },
+        type: {
+            type: String
+        },
+        number: {
+            type: String
         }
     }]
 
