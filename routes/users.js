@@ -3,6 +3,8 @@ const User = require('../src/models/general')
 const Business = require('../src/models/business')
 const FreeLancer = require('../src/models/freeLancer')
 const Employee = require('../src/models/employee')
+const bcrypt = require('bcryptjs')
+
 
 const auth = require('../src/middleware/auth')
 const multer = require('multer')
@@ -97,41 +99,6 @@ app.post('/users/logout', auth, async (req, res) => {
   }
 })
 
-// app.post('/users/logout', auth, async (req, res) => {
-//   const _id = req.body.user._id;
-//   console.log(req.body)
-//   User.findById(_id).then((user) => {
-//     if (!user) {
-//       return res.status(404).send()
-//     }
-//     // res.send();
-//     // console.log(user.tokens[0].token)
-//     user.tokens.forEach( t => {
-//       t.token = '';
-//     }) 
-//     //  [{ token: '', _id:  }];
-//   return user.save();
-//   // res.send();
-//   // res.send(user)
-// })
-//   .then((re) => {
-//     res.send()
-//   })
-//   .catch((error) => {
-//     console.log(error)
-//     res.status(500).send(error)
-//   })
-//   // try {
-//   //   req.user.tokens = req.user.tokens.filter((token) => {
-//   //     token.token !== req.token
-//   //   })
-//   //   await req.user.save()
-//   //   res.send()
-//   // } catch (e) {
-//   //   res.status(500).send()
-//   // }
-// })
-
 app.get('/users/:id', async (req, res) => { //  Get a certain user
   const _id = req.params.id
   User.findById(_id).then((value) => {
@@ -157,11 +124,7 @@ app.patch('/users/me', auth, async (req, res) => { // Update user data
     // let user = await User.findById(_id)
     updates.forEach((update) => {
 
-      // if (update === 'gender') {
-      //  Employee.updateOne({ _id: req.user._id }, { $set: { gender: req.body[update] } });
-      // } else {
       req.user[update] = req.body[update]
-      // }
     });
     await req.user.save();
     // if (!user) {
@@ -220,6 +183,21 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
     res.send(user.avatar)
   } catch (e) {
     res.status(404).send()
+  }
+})
+
+app.patch('/users/me/password', auth, async (req, res) => {
+
+  try {
+    const isMatch = await bcrypt.compare(password, req.user.password)
+    if (!isMatch) {
+      throw new Error('You must provide the correct old password')
+    }
+    req.user.password = req.body.newPass
+    await req.user.save()
+    res.send()
+  } catch (e) {
+    res.status(400).send()
   }
 })
 module.exports = app
