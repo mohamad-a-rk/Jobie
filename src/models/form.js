@@ -8,7 +8,13 @@ const FormSchema = new mongoose.Schema({
         maxlength: 500
     },
     endDate: {
-        type: Date
+        type: Date,
+        validate(endDate) {
+            let today = new Date()
+            if (today.getTime() > endDate.getTime()) {
+                throw new Error('Invalid date')
+            }
+        }
     },
     owner: {
         type: mongoose.SchemaTypes.ObjectId,
@@ -21,7 +27,6 @@ const FormSchema = new mongoose.Schema({
     },
     field: {
         type: String,
-        required: true
     }
 })
 const Form = mongoose.model("Form", FormSchema)

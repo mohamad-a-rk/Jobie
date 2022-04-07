@@ -39,9 +39,6 @@ app.post('/users', async (req, res) => {
   try {
     let value = await user.save()
     let token = await user.generateAuthToken()
-    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    // res.setHeader('Access-Control-Allow-Credentials', true);
-
     res.send({ value, token })
     sendEmail.sendWelcomeMassege(user.email, user.name)
   } catch (e) {
@@ -113,7 +110,7 @@ app.get('/users/:id', async (req, res) => { //  Get a certen user
 app.patch('/users/me', auth, async (req, res) => { // Update user data
   // const _id = req.params.id
   const updates = Object.keys(req.body)
-  const allowedChanges = ['email', 'name', 'password', 'bio', 'prevJobs', 'specilization', 'location', 'phone']
+  const allowedChanges = ['email', 'name', 'password', 'bio', 'prevJobs', 'specilization', 'location', 'phone', 'gender']
   let isValidOpreation = updates.every((update) => allowedChanges.includes(update))
   if (!isValidOpreation) {
     return res.status(400).send()

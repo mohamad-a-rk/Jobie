@@ -9,10 +9,6 @@ const RateSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'Business'
 
-    },
-    freelancer: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'FreeLancer'
     }
 })
 

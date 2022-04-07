@@ -107,7 +107,7 @@
 const express = require('express')
 const multer = require('multer')
 require('./src/db/mongoose')
-// const taskRouter = require('./routers/task')
+const formRouter = require('./routes/form')
 const userRouter = require('./routes/users')
 
 const app = express()
@@ -148,7 +148,7 @@ app.use((req, res, next) => {
 });
 
 app.use(userRouter)
-// app.use(taskRouter)
+app.use(formRouter)
 
 
 app.use(express.json())
