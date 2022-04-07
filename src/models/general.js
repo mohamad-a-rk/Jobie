@@ -114,10 +114,8 @@ GeneralSchema.pre('save', async function (next) {
 
 GeneralSchema.pre('remove', async function (next) {  //
     await Feedback.deleteMany({ feedbacker: this._id })
-    await Feedback.deleteMany({ freelancer: this._id })
     await Form.deleteMany({ owner: this._id })
     await Rate.deleteMany({ rater: this._id })
-    await Rate.deleteMany({ freelancer: this._id })
     next()
 })
 

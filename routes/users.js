@@ -64,7 +64,7 @@ app.post('/users/login', async (req, res) => {
   try {
     let user = await User.findByCredentials(req.body.email, req.body.password)
     let token = await user.generateAuthToken()
-    res.send({ token, user })
+    res.cookie('field', user.specialization, { maxAge: 10800 }).send({ token, user })
   } catch (e) {
     res.status(400).send(e)
     console.log(e);
@@ -72,7 +72,6 @@ app.post('/users/login', async (req, res) => {
 })
 
 app.get('/users', async (req, res) => { // Get all users 
-  // No need for this
 
   try {
     let value = await User.find({})
@@ -112,24 +111,18 @@ app.get('/users/:id', async (req, res) => { //  Get a certain user
 })
 
 app.patch('/users/me', auth, async (req, res) => { // Update user data
-  // const _id = req.params.id
   const updates = Object.keys(req.body)
-  const allowedChanges = ['email', 'name', 'gender', 'bio', 'prevJobs', 'specialization', 'location', 'phone']
+  const allowedChanges = ['name', 'gender', 'bio', 'prevJobs', 'specialization', 'location', 'phone']
   let isValidOperation = updates.every((update) => allowedChanges.includes(update))
   if (!isValidOperation) {
     return res.status(400).send()
   }
   try {
-    // let user = await User.findByIdAndUpdate(_id, req.body, { runValidators: true, new: true })
-    // let user = await User.findById(_id)
     updates.forEach((update) => {
 
       req.user[update] = req.body[update]
     });
     await req.user.save();
-    // if (!user) {
-    //     return res.status(404).send()
-    // }
 
     res.send(req.user)
   } catch (error) {
@@ -139,10 +132,7 @@ app.patch('/users/me', auth, async (req, res) => { // Update user data
 
 app.delete('/users/me', auth, async (req, res) => {
   try {
-    // let user = await User.findByIdAndDelete(req.user._id)
-    // if (!user) {
-    //     return res.status(404).send()
-    // }
+
     await req.user.remove()
     sendEmail.sendFinalMassege(req.user.email, req.user.name)
     res.send(req.user)

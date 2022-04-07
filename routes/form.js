@@ -24,39 +24,15 @@ app.post('/forms', auth, async (req, res) => { // Create a new form
 })
 
 
-// app.get('/forms', auth, async (req, res) => {
-//     const match = {}
-//     const sort = {} // search by
-//     if (req.query.completed) {
-//         match.completed = req.query.completed === 'true'
-//     }
-
-//     if (req.query.sortBy) {
-//         let parts = req.query.sortBy.split(':')
-//         sort[parts[0]] = parts[1] == 'asc' ? 1 : -1
-//     }
-
-//     try {
-//         await req.user.populate({
-//             path: 'forms',
-//             match,
-//             options: {
-//                 limit: parseInt(req.query.limit),
-//                 skip: parseInt(req.query.skip),
-//                 sort
-//             }
-//         })
-//         res.send(req.user.tasks)
-//     } catch (e) {
-//         res.status(500).send()
-//     }
+// app.get('/forms', async (req, res) => {
+//     Form.find({}).skip(10)
 // })
 
 app.get('/forms/:id', async (req, res) => { // Get a certen form
     const _id = req.params.id
 
     try {
-        let value = await Task.find({ _id, owner: req.user._id })
+        let value = await Form.find({ _id })
         if (!value) {
             return res.status(404).send()
         }
@@ -68,9 +44,9 @@ app.get('/forms/:id', async (req, res) => { // Get a certen form
 app.patch('/forms/:id', auth, async (req, res) => { // Update form data
     const _id = req.params.id
     const updates = Object.keys(req.body)
-    const allowedChanges = ['description', 'endDate', 'typeofjob']
-    let isValidOpreation = updates.every((update) => allowedChanges.includes(update))
-    if (!isValidOpreation) {
+    const nonallowedChanges = ['owner']
+    let isInvalidOpreation = updates.every((update) => nonallowedChanges.includes(update))
+    if (isInvalidOpreation) {
         res.status(400).send()
     }
     try {
