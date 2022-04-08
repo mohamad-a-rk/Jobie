@@ -92,14 +92,15 @@ const GeneralSchema = new mongoose.Schema({
         }
     },
     phone: [{
-        _id: {
-            type: Number
-        },
-        type: {
-            type: String
-        },
-        number: {
-            type: String
+
+        phoneNum: {
+
+            type: {
+                type: String
+            },
+            number: {
+                type: String
+            }
         }
     }]
 

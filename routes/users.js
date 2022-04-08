@@ -40,9 +40,6 @@ app.post('/users', async (req, res) => {
   try {
     let value = await user.save()
     let token = await user.generateAuthToken()
-    // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    // res.setHeader('Access-Control-Allow-Credentials', true);
-
     res.send({ value, token })
     sendEmail.sendWelcomeMassege(user.email, user.name)
   } catch (e) {
@@ -65,12 +62,13 @@ app.post('/users/login', async (req, res) => {
   try {
     let user = await User.findByCredentials(req.body.email, req.body.password)
     let token = await user.generateAuthToken()
-    res.send({ token, user })
+    res.cookie('field', user.specialization, { maxAge: 10800 }).send({ token, user })
   } catch (e) {
     res.status(400).send(e)
     console.log(e);
   }
 })
+
 
 app.get('/users', async (req, res) => { // Get all users 
   // No need for this
@@ -150,7 +148,7 @@ app.get('/users/:id', async (req, res) => { //  Get a certain user
 app.patch('/users/me', auth, async (req, res) => { // Update user data
   // const _id = req.params.id
   const updates = Object.keys(req.body)
-  const allowedChanges = ['email', 'name', 'gender', 'bio', 'prevJobs', 'specialization', 'location', 'phone']
+  const allowedChanges = ['email', 'name', 'gender', 'dayOfBirth', 'skills', 'bio', 'prevJobs', 'specialization', 'location', 'phone']
   let isValidOperation = updates.every((update) => allowedChanges.includes(update))
   if (!isValidOperation) {
     return res.status(400).send()
@@ -163,7 +161,7 @@ app.patch('/users/me', auth, async (req, res) => { // Update user data
       // if (update === 'gender') {
       //  Employee.updateOne({ _id: req.user._id }, { $set: { gender: req.body[update] } });
       // } else {
-        req.user[update] = req.body[update]
+      req.user[update] = req.body[update]
       // }
     });
     await req.user.save();
@@ -198,7 +196,7 @@ app.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => 
   req.user.image = buffer;
   await req.user.save()
   console.log(req.user.image)
-  res.send(req.user.image)
+  res.send(req.user)
 }, (error, req, res, next) => {
   // console.log(error)
   res.status(400).send({ error: 'Please upload a valid image' })
@@ -216,11 +214,11 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
   try {
     const _id = req.params.id
     let user = await User.findById(_id)
-    if (!user || !user.avatar) {
-      throw new Error()
+    if (!user || !user.image) {
+      throw new Error('No image found')
     }
-    res.set('Content-Type', 'image/png')
-    res.send(user.avatar)
+    // res.set('Content-Type', 'text/plain')
+    res.send(user.image)
   } catch (e) {
     res.status(404).send()
   }
