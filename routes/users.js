@@ -71,6 +71,7 @@ app.post('/users/login', async (req, res) => {
   }
 })
 
+
 app.get('/users', async (req, res) => { // Get all users 
 
   try {
@@ -112,7 +113,7 @@ app.get('/users/:id', async (req, res) => { //  Get a certain user
 
 app.patch('/users/me', auth, async (req, res) => { // Update user data
   const updates = Object.keys(req.body)
-  const allowedChanges = ['name', 'gender', 'bio', 'prevJobs', 'specialization', 'location', 'phone']
+  const allowedChanges = ['email', 'name', 'gender', 'dayOfBirth', 'skills', 'bio', 'prevJobs', 'specialization', 'location', 'phone']
   let isValidOperation = updates.every((update) => allowedChanges.includes(update))
   if (!isValidOperation) {
     return res.status(400).send()
