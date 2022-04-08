@@ -64,7 +64,7 @@ app.post('/users/login', async (req, res) => {
   try {
     let user = await User.findByCredentials(req.body.email, req.body.password)
     let token = await user.generateAuthToken()
-    res.cookie('field', user.specialization, { maxAge: 10800 }).send({ token, user })
+    res.cookie('field', user.specialization).send({ token, user })
   } catch (e) {
     res.status(400).send(e)
     console.log(e);
@@ -147,7 +147,7 @@ app.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => 
 
   req.user.image = buffer;
   await req.user.save()
-  console.log(req.user.image)
+  // console.log(req.user.image)
   res.send(req.user.image)
 }, (error, req, res, next) => {
   // console.log(error)
@@ -166,15 +166,25 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
   try {
     const _id = req.params.id
     let user = await User.findById(_id)
-    if (!user || !user.avatar) {
+    if (!user || !user.image) {
       throw new Error()
     }
     res.set('Content-Type', 'image/png')
-    res.send(user.avatar)
+    res.send(user.image)
   } catch (e) {
     res.status(404).send()
   }
 })
+
+// app.get('/users/me/avatar', auth, async (req, res) => { //  Get a certain user
+//   try {
+//     res.set('Content-Type', 'image/png')
+//     res.send(req.user.image)
+//   } catch (e) {
+//     res.status(404).send()
+//     console.log(e);
+//   }
+// })
 
 app.patch('/users/me/password', auth, async (req, res) => {
 
@@ -187,7 +197,7 @@ app.patch('/users/me/password', auth, async (req, res) => {
     await req.user.save()
     res.send()
   } catch (e) {
-    res.status(400).send()
+    res.status(400).send(e.toString())
   }
 })
 module.exports = app

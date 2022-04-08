@@ -11,7 +11,7 @@ const formRouter = require('./routes/form')
 const userRouter = require('./routes/users')
 
 const app = express()
-
+app.use(cookieParser())
 const upload = multer({
   dest: 'images',
   limits: {

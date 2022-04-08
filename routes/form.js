@@ -24,9 +24,33 @@ app.post('/forms', auth, async (req, res) => { // Create a new form
 })
 
 
-// app.get('/forms', async (req, res) => {
-//     Form.find({}).skip(10)
-// })
+app.get('/forms', async (req, res) => {
+    today = new Date()
+    const sort = {}
+    if (req.query.sortBy) {
+        let parts = req.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] == 'asc' ? 1 : -1
+    }
+    try {
+        var forms = await Form.find({
+            deadline: { $gt: today }
+        }).limit(parseInt(req.query.limit))
+            .skip(parseInt(req.query.skip))
+            .sort(sort)
+        // if (req.cookies.field) {
+        //     forms = forms.filter((form) => {
+        //         !form.title.includes(req.cookies.field)
+        //     })
+        // }
+        res.send(forms)
+    }
+    catch (e) {
+        res.status(500).send()
+        console.log('====================================');
+        console.log(e);
+        console.log('====================================');
+    }
+})
 
 app.get('/forms/:id', async (req, res) => { // Get a certen form
     const _id = req.params.id
