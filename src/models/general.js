@@ -152,5 +152,10 @@ GeneralSchema.statics.findByCredentials = async (email, password) => {
 
     return user
 }
+GeneralSchema.virtual('responses', {
+    ref: 'Response',
+    localField: '_id',
+    foreignField: 'owner'
+})
 const User = mongoose.model("GeneralUser", GeneralSchema)
 module.exports = User

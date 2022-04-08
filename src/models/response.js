@@ -3,6 +3,11 @@ const validator = require('validator')
 
 
 const ResponseSchema = new mongoose.Schema({
+    owner: {
+        type: mongoose.SchemaTypes.ObjectId,
+        required: true,
+        ref: 'GeneralUser'
+    },
     form: {
         type: mongoose.SchemaTypes.ObjectId,
         required: true,
@@ -65,6 +70,6 @@ const ResponseSchema = new mongoose.Schema({
             type: String
         }
     }
-})
+}, { timestamps: true })
 const Response = mongoose.model("Response", ResponseSchema)
 module.exports = Response
