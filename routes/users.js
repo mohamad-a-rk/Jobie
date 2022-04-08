@@ -190,13 +190,14 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
 app.patch('/users/me/password', auth, async (req, res) => {
 
   try {
+    const password = req.body.password;
     const isMatch = await bcrypt.compare(password, req.user.password)
     if (!isMatch) {
       throw new Error('You must provide the correct old password')
     }
     req.user.password = req.body.newPass
     await req.user.save()
-    res.send()
+    res.send(req.user)
   } catch (e) {
     res.status(400).send(e.toString())
   }
