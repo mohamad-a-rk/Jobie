@@ -20,21 +20,6 @@ app.post('/response', async (req, res) => { // Create a new response
     }
 })
 
-app.get('/response/:id', async (req, res) => { // Get a specific Response
-    try {
-        const id = req.params.id
-        const value = await Response.findOne({ _id: id })
-        if (!value) {
-            res.status(404).send()
-        } else {
-            res.send(value)
-        }
-    } catch (e) {
-        res.send(e.toString())
-    }
-})
-
-
 app.get('/response/me', auth, async (req, res) => {
     try {
         await req.user.populate({
@@ -53,6 +38,20 @@ app.get('/response/me', auth, async (req, res) => {
     }
 })
 
+app.get('/response/:id', async (req, res) => { // Get a specific Response
+    try {
+        const id = req.params.id
+        const value = await Response.findOne({ _id: id })
+        if (!value) {
+            res.status(404).send()
+        } else {
+            res.send(value)
+        }
+    } catch (e) {
+        res.send(e.toString())
+    }
+})
+
 
 app.patch('/response/:id', auth, async (req, res) => { // Update response data
     const _id = req.params.id
@@ -63,12 +62,12 @@ app.patch('/response/:id', auth, async (req, res) => { // Update response data
         res.status(400).send()
     }
     try {
-        let response = await Response.findOne({ _id, owner: req.user._id })
+        let response = await Response.findOne({ _id, $or: [{ owner: req.user._id }] })
         if (!response) {
             return res.status(404).send()
         }
         updates.forEach((update) => response[update] = req.body[update])
-        await form.save()
+        await response.save()
         res.send(response)
     } catch (error) {
         res.status(400).send(error.toString())
@@ -78,8 +77,10 @@ app.patch('/response/:id', auth, async (req, res) => { // Update response data
 
 app.delete('/response/:id', auth, async (req, res) => {
     try {
+        //Form owner must be able to delete responses
         let response = await Response.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
         if (!response) {
+
             return res.status(404).send()
         }
         res.send(response)

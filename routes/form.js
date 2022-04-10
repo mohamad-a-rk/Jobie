@@ -24,24 +24,26 @@ app.post('/forms', auth, async (req, res) => { // Create a new form
 })
 
 
-app.get('/forms', async (req, res) => {
+app.get('/forms', async (req, res) => { // Get and search is
     today = new Date()
     const sort = {}
+    const search = {}
     if (req.query.sortBy) {
         let parts = req.query.sortBy.split(':')
         sort[parts[0]] = parts[1] == 'asc' ? 1 : -1
     }
+    if (req.query.search) {
+        let parts = req.query.search.split(':')
+        search[parts[0]] = "/" + parts[1] + "/"
+    }
     try {
         var forms = await Form.find({
-            deadline: { $gt: today }
+            deadline: { $gt: today },
+            ...search
         }).limit(parseInt(req.query.limit))
             .skip(parseInt(req.query.skip))
             .sort(sort)
-        // if (req.cookies.field) {
-        //     forms = forms.filter((form) => {
-        //         !form.title.includes(req.cookies.field)
-        //     })
-        // }
+
         res.send(forms)
     }
     catch (e) {

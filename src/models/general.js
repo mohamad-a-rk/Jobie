@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken')
 
 const Feedback = require('./feedback')
 const Form = require('./form')
-const Rate = require('./rate')
 
 const GeneralSchema = new mongoose.Schema({
     bio: {
@@ -116,7 +115,6 @@ GeneralSchema.pre('save', async function (next) {
 GeneralSchema.pre('remove', async function (next) {  //
     await Feedback.deleteMany({ feedbacker: this._id })
     await Form.deleteMany({ owner: this._id })
-    await Rate.deleteMany({ rater: this._id })
     next()
 })
 

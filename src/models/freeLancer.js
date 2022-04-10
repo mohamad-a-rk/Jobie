@@ -15,29 +15,15 @@ const FreeLancerSchema = new mongoose.Schema({
             type: String
         }
     }],
-    rates: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'Rate' }
-
-    ],
-    feedbacks: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'Feedback' }
-
-    ]
 
 }, { discriminatorKey: 'userType' })
 
-// FreeLancerSchema.virtual('feedbacks', {
-// BusinessSchema.virtual('feedbacks', {
-//     ref: 'Feedback',
-//     localField: '_id',
-//     foreignField: 'freelancer'
-// })
+FreeLancerSchema.virtual('feedbacks', {
+    ref: 'Feedback',
+    localField: '_id',
+    foreignField: 'freelancer'
+})
 
-// FreeLancerSchema.virtual('rates', {
-//     ref: 'Rate',
-//     localField: '_id',
-//     foreignField: 'freelancer'
-// })
 
 const FreeLancer = general.discriminator('FreeLancer', FreeLancerSchema)
 module.exports = FreeLancer
