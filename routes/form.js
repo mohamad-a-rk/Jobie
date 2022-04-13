@@ -34,22 +34,22 @@ app.get('/forms', async (req, res) => { // Get and search is
     }
     if (req.query.search) {
         let parts = req.query.search.split(':')
-        search[parts[0]] = "/" + parts[1] + "/"
+        search[parts[0]] = "" + parts[1] //+ "/"
     }
     try {
         var forms = await Form.find({
             deadline: { $gt: today },
             ...search
-        }).limit(parseInt(req.query.limit))
+        }).populate('owner').limit(parseInt(req.query.limit))
             .skip(parseInt(req.query.skip))
             .sort(sort)
-
+            // console.log(forms)
         res.send(forms)
     }
     catch (e) {
         res.status(500).send()
         console.log('====================================');
-        console.log(e);
+        console.log(e.message);
         console.log('====================================');
     }
 })

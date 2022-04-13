@@ -60,7 +60,6 @@ const FormSchema = new mongoose.Schema({
         }
     ],
     details: {
-
     }
 })
 
@@ -70,7 +69,6 @@ FormSchema.methods.toJSON = function () {
     Response.count({}, (err, count) => {
         formObject.submitters = count
     })
-
     return formObject
 }
 const Form = mongoose.model("Form", FormSchema)

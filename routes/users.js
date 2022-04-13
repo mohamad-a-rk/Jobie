@@ -75,7 +75,15 @@ app.post('/users/login', async (req, res) => {
 app.get('/users', async (req, res) => { // Get all users 
 
   try {
-    let value = await User.find({})
+    const search = {}
+    if (req.query.search) {
+      let parts = req.query.search.split(':')
+      search[parts[0]] = "" + parts[1] //+ "/"
+    }
+    let value = await User.find({
+      ...search
+    })
+
     res.send(value)
   } catch (error) {
     res.status(500).send()
@@ -144,7 +152,7 @@ app.delete('/users/me', auth, async (req, res) => {
 
 app.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
   let buffer = await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }).toBuffer()
-  // console.log(buffer)
+  console.log(req.file)
 
   req.user.image = buffer;
   await req.user.save()
@@ -170,8 +178,9 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
     if (!user || !user.image) {
       throw new Error()
     }
-    res.set('Content-Type', 'image/png')
-    res.send(user.image)
+    console.log('ddddd', user.image.buffer)
+    // res.set('Content-Type', 'image/png')
+    res.send(user.image.buffer)
   } catch (e) {
     res.status(404).send()
   }
@@ -186,6 +195,7 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
 //     console.log(e);
 //   }
 // })
+//
 
 app.patch('/users/me/password', auth, async (req, res) => {
 
