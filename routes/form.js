@@ -34,7 +34,7 @@ app.get('/forms', async (req, res) => { // Get and search is
     }
     if (req.query.search) {
         let parts = req.query.search.split(':')
-        search[parts[0]] = "" + parts[1] //+ "/"
+        search[parts[0]] = "" + parts[1] //+ ".*/"
     }
     try {
         var forms = await Form.find({

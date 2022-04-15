@@ -30,6 +30,7 @@ app.get('/response/me', auth, async (req, res) => {
                 }
             }
         })
+        console.log(req.user)
         res.send(req.user.responses)
     }
     catch (e) {
