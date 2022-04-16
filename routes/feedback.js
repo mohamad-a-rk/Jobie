@@ -7,7 +7,7 @@ app.use(express.json())
 
 app.post('/feedback', auth, async (req, res) => { // Create a new feedback
     {
-        if (req.user.userType === "Business") {
+        if (req.user.userType !== "Business") {
             res.status(401).send()
         }
         let feedback = new Feedback({
@@ -36,10 +36,11 @@ app.get('/feedback/me', auth, async (req, res) => {
     }
 })
 
+//edited
 app.get('/feedback/:id', async (req, res) => { // Get a specific Feedback
     try {
         const id = req.params.id
-        const value = await Feedback.findOne({ _id: id })
+        const value = await Feedback.find({ freelancer: id }).populate('feedbacker')
         if (!value) {
             res.status(404).send()
         } else {
