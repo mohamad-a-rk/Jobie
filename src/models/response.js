@@ -5,7 +5,6 @@ const validator = require('validator')
 const ResponseSchema = new mongoose.Schema({
     owner: {
         type: mongoose.SchemaTypes.ObjectId,
-        required: true,
         ref: 'GeneralUser'
     },
     form: {
