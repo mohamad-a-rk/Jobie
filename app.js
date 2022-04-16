@@ -9,6 +9,8 @@ var createError = require('http-errors');
 require('./src/db/mongoose')
 const formRouter = require('./routes/form')
 const userRouter = require('./routes/users')
+const responseRouter = require('./routes/response')
+const feedbackRouter = require('./routes/feedback')
 
 const app = express()
 app.use(cookieParser())
@@ -30,7 +32,7 @@ const upload = multer({
   }
 })
 
-app.post('/upload', upload.single('upload'), (req, res) => {
+app.post('/upload', upload.single('avatar'), (req, res) => {
   res.send()
 }, (error, req, res, next) => {
   res.status(500).send({ error })
@@ -46,6 +48,8 @@ app.use((req, res, next) => {
 
 app.use(userRouter)
 app.use(formRouter)
+app.use(responseRouter)
+app.use(feedbackRouter)
 
 
 app.use(express.json())

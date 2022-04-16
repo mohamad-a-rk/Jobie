@@ -34,15 +34,22 @@ app.get('/forms', async (req, res) => { // Get and search is
         let parts = req.query.sortBy.split(':')
         sort[parts[0]] = parts[1] == 'asc' ? 1 : -1
     }
-    if (req.query.search) {
-        let parts = req.query.search.split(':')
-        search[parts[0]] = "/" + parts[1] + "/"
+    if (req.query.title) {
+        search["title"] = req.query.title
     }
+    if (req.query.place) {
+
+        search["location"] = req.query.place
+    }
+    if (req.query.profession) {
+        search["field"] = req.query.profession
+    }
+
     try {
         var forms = await Form.find({
             deadline: { $gt: today },
             ...search
-        }).limit(parseInt(req.query.limit))
+        }).populate('owner').limit(parseInt(req.query.limit))
             .skip(parseInt(req.query.skip))
             .sort(sort)
 
@@ -52,7 +59,7 @@ app.get('/forms', async (req, res) => { // Get and search is
     catch (e) {
         res.status(500).send()
         console.log('====================================');
-        console.log(e);
+        console.log(e.message);
         console.log('====================================');
     }
 })
@@ -61,12 +68,12 @@ app.get('/forms/:id', async (req, res) => { // Get a certen form
     const _id = req.params.id
 
     try {
-        let value = await Form.find({ _id })
+        let value = await Form.findOne({ _id })
         if (!value) {
             return res.status(404).send()
         }
-        value.submitters = await Response.count({ form: _id })
-        res.send(value)
+        const submitters = await Response.count({ form: _id })
+        res.send({ value, submitters })
     } catch (error) {
         res.status(500).send(error)
     }

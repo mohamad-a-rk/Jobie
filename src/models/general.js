@@ -120,7 +120,7 @@ GeneralSchema.pre('remove', async function (next) {  //
 
 
 GeneralSchema.methods.generateAuthToken = async function () {
-    let token = jwt.sign({ _id: this._id.toString() }, 'thisIsmySecret')
+    let token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET)
 
     this.tokens = this.tokens.concat({ token })
     await this.save()
@@ -139,6 +139,7 @@ GeneralSchema.methods.toJSON = function () {
 }
 GeneralSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email })
+
     if (!user) {
         throw new Error("Unable to login")
     }

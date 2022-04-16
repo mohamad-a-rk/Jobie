@@ -11,9 +11,9 @@ const EmployeeSchema = new mongoose.Schema({
         type: Date,
     },
     skills: [{
-        skill: {
-            type: String
-        }
+
+        type: String
+
     }]
 }, { discriminatorKey: 'userType' })
 

@@ -11,9 +11,9 @@ const FreeLancerSchema = new mongoose.Schema({
         type: Date,
     },
     skills: [{
-        skill: {
+        // skill: {
             type: String
-        }
+        // }
     }],
 
 }, { discriminatorKey: 'userType' })
