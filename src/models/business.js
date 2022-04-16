@@ -19,11 +19,6 @@ BusinessSchema.virtual('feedbacks', {
     foreignField: 'feedbacker'
 })
 
-BusinessSchema.virtual('rates', {
-    ref: 'Rate',
-    localField: '_id',
-    foreignField: 'rater'
-})
 
 BusinessSchema.virtual('forms', {
     ref: 'Form',

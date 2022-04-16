@@ -79,6 +79,7 @@ app.patch('/response/:id', auth, async (req, res) => { // Update response data
 app.delete('/response/:id', auth, async (req, res) => {
     try {
         //Form owner must be able to delete responses
+
         let response = await Response.findOneAndDelete({ _id: req.params.id, owner: req.user._id })
         if (!response) {
 

@@ -63,13 +63,12 @@ const FormSchema = new mongoose.Schema({
     }
 })
 
-FormSchema.methods.toJSON = function () {
-    const formObject = this.toObject()
-    formObject.submitters = 0
-    Response.count({}, (err, count) => {
-        formObject.submitters = count
-    })
-    return formObject
-}
+
+FormSchema.virtual('responses', {
+    ref: 'Response',
+    localField: '_id',
+    foreignField: 'form'
+})
+
 const Form = mongoose.model("Form", FormSchema)
 module.exports = Form

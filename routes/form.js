@@ -1,5 +1,7 @@
 const express = require('express')
 const Form = require('../src/models/form')
+const Response = require('../src/models/response')
+
 const auth = require('../src/middleware/auth')
 const app = express.Router()
 
@@ -43,7 +45,6 @@ app.get('/forms', async (req, res) => { // Get and search is
         }).populate('owner').limit(parseInt(req.query.limit))
             .skip(parseInt(req.query.skip))
             .sort(sort)
-            // console.log(forms)
         res.send(forms)
     }
     catch (e) {
@@ -58,11 +59,14 @@ app.get('/forms/:id', async (req, res) => { // Get a certen form
     const _id = req.params.id
 
     try {
-        let value = await Form.find({ _id })
+        let value = await Form.findOne({ _id })
         if (!value) {
             return res.status(404).send()
         }
-        res.send(value)
+        const submitters = await Response.count({ form: _id });
+        
+        console.log(value)
+        res.send({value, submitters})
     } catch (error) {
         res.status(500).send(error)
     }
