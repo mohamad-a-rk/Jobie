@@ -41,7 +41,19 @@ app.get('/response/me', auth, async (req, res) => {
 
     }
 })
-
+app.get('/response/form/:id', async (req, res) => { // Get a specific Response from a specific form 
+    try {
+        const id = req.params.id
+        const value = await Response.find({ form: id })
+        if (!value) {
+            res.status(404).send()
+        } else {
+            res.send(value)
+        }
+    } catch (e) {
+        res.send(e.toString())
+    }
+})
 app.get('/response/:id', async (req, res) => { // Get a specific Response
     try {
         const id = req.params.id
