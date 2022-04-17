@@ -190,7 +190,7 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
     }
     // console.log('ddddd', user.image.buffer)
     // res.set('Content-Type', 'application/octet-stream')
-    res.send(user.image)
+    res.send(user.image.toString('base64'))
   } catch (e) {
     res.status(404).send()
   }
