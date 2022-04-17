@@ -24,19 +24,23 @@ app.post('/response', async (req, res) => { // Create a new response
 app.get('/response/me', auth, async (req, res) => {
     try {
         await req.user.populate({
-                path: 'responses',
-                options: {
-                    sort: {
-                        createdAt: -1
+            path: 'responses',
+            options: {
+                sort: {
+                    createdAt: -1
+                },
+                populate: {
+                    path: 'form',
+                    populate: {
+                        path: 'owner',
+                        select: 'name'
+
                     }
                 }
-            })
+            }
+        })
 
-        console.log(req.user.responses)
-        // for (const respon in req.user.responses) {
-        //     await respon.populate('owner')
-        // }
-
+        console.log(req.user)
         res.send(req.user.responses)
     }
     catch (e) {
