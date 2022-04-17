@@ -34,12 +34,18 @@ app.get('/forms', async (req, res) => { // Get and search is
         let parts = req.query.sortBy.split(':')
         sort[parts[0]] = parts[1] == 'asc' ? 1 : -1
     }
+    if (req.query.owner) {
+        search["owner"] = req.query.owner
+    }
+    if (req.query.jobType) {
+        search["jobType"] = req.query.jobType
+    }
     if (req.query.title) {
         search["title"] = req.query.title
     }
     if (req.query.place) {
 
-        search["location"] = req.query.place
+        search["location"] = `$or[ location.city: ${req.query.place} , location.country: ${req.query.place}]`
     }
     if (req.query.profession) {
         search["field"] = req.query.profession
@@ -52,6 +58,7 @@ app.get('/forms', async (req, res) => { // Get and search is
         }).populate('owner').limit(parseInt(req.query.limit))
             .skip(parseInt(req.query.skip))
             .sort(sort)
+
 
 
         res.send(forms)

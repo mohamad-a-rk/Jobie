@@ -76,10 +76,20 @@ app.get('/users', async (req, res) => { // Get all users
 
   try {
     const search = {}
-    if (req.query.search) {
-      let parts = req.query.search.split(':')
-      search[parts[0]] = "" + parts[1] //+ "/"
+
+    if (req.query.userType) {
+      search["userType"] = req.query.userType
     }
+    if (req.query.name) {
+      search["name"] = req.query.name
+    }
+    if (req.query.specialization) {
+      search["specialization"] = req.query.specialization
+    }
+    // if (req.query.search) {
+    //   let parts = req.query.search.split(':')
+    //   search[parts[0]] = "" + parts[1] //+ "/"
+    // }
     let value = await User.find({
       ...search
     })
@@ -155,7 +165,7 @@ app.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => 
 
   req.user.image = buffer;
   await req.user.save()
-  // console.log(req.user.image)
+  console.log('image', req.user.image)
   res.send(req.user.image)
 }, (error, req, res, next) => {
   // console.log(error)
@@ -180,7 +190,7 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
     }
     // console.log('ddddd', user.image.buffer)
     // res.set('Content-Type', 'application/octet-stream')
-    res.send(user.image)
+    res.send(user.image.toString('base64'))
   } catch (e) {
     res.status(404).send()
   }

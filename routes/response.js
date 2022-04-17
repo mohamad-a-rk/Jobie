@@ -15,6 +15,7 @@ app.post('/response', async (req, res) => { // Create a new response
             res.send(value)
         }
         catch (error) {
+            console.log(error)
             res.status(400).send(error.toString())
         }
     }
@@ -38,6 +39,7 @@ app.get('/response/me', auth, async (req, res) => {
         res.send(req.user.responses)
     }
     catch (e) {
+        console.log(e)
         res.status(500).send(e.toString())
 
     }
