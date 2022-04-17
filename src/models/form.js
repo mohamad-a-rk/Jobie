@@ -63,7 +63,10 @@ const FormSchema = new mongoose.Schema({
     }
 })
 
-
+FormSchema.pre('remove', async function (next) {  //
+    await Response.deleteMany({ form: this._id })
+    next()
+})
 FormSchema.virtual('responses', {
     ref: 'Response',
     localField: '_id',

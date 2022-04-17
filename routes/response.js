@@ -15,6 +15,7 @@ app.post('/response', async (req, res) => { // Create a new response
             res.send(value)
         }
         catch (error) {
+            console.log(error)
             res.status(400).send(error.toString())
         }
     }
@@ -23,22 +24,40 @@ app.post('/response', async (req, res) => { // Create a new response
 app.get('/response/me', auth, async (req, res) => {
     try {
         await req.user.populate({
-            path: 'responses',
-            options: {
-                sort: {
-                    createdAt: -1
+                path: 'responses',
+                options: {
+                    sort: {
+                        createdAt: -1
+                    }
                 }
-            }
-        })
-        console.log(req.user)
+            })
+
+        console.log(req.user.responses)
+        // for (const respon in req.user.responses) {
+        //     await respon.populate('owner')
+        // }
+
         res.send(req.user.responses)
     }
     catch (e) {
+        console.log(e)
         res.status(500).send(e.toString())
 
     }
 })
-
+app.get('/response/form/:id', async (req, res) => { // Get a specific Response from a specific form 
+    try {
+        const id = req.params.id
+        const value = await Response.find({ form: id })
+        if (!value) {
+            res.status(404).send()
+        } else {
+            res.send(value)
+        }
+    } catch (e) {
+        res.send(e.toString())
+    }
+})
 app.get('/response/:id', async (req, res) => { // Get a specific Response
     try {
         const id = req.params.id
