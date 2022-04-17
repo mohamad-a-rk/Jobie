@@ -27,12 +27,13 @@ app.get('/response/me', auth, async (req, res) => {
             options: {
                 sort: {
                     createdAt: -1
+                },
+                populate: {
+                    path: 'owner'
                 }
             }
         })
-        for (const respon in req.user.reaponses) {
-            await respon.populate('owner')
-        }
+
         console.log(req.user)
         res.send(req.user.responses)
     }

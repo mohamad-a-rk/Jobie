@@ -151,8 +151,7 @@ app.delete('/users/me', auth, async (req, res) => {
 })
 
 app.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
-  let buffer = await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }).toBuffer()
-  console.log(await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }))
+  let buffer = await (await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }).toBuffer())
 
   req.user.image = buffer;
   await req.user.save()
@@ -180,7 +179,7 @@ app.get('/users/:id/avatar', async (req, res) => { //  Get a certain user
       throw new Error()
     }
     // console.log('ddddd', user.image.buffer)
-    res.set('Content-Type', 'application/octet-stream')
+    // res.set('Content-Type', 'application/octet-stream')
     res.send(user.image)
   } catch (e) {
     res.status(404).send()
