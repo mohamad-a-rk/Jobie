@@ -30,7 +30,12 @@ app.get('/response/me', auth, async (req, res) => {
                     createdAt: -1
                 },
                 populate: {
-                    path: 'owner'
+                    path: 'form',
+                    populate: {
+                        path: 'owner',
+                        select: 'name'
+
+                    }
                 }
             }
         })
