@@ -137,6 +137,8 @@ app.patch('/users/me', auth, async (req, res) => { // Update user data
     return res.status(400).send()
   }
   try {
+
+    console.log(req.body.phone)
     updates.forEach((update) => {
 
       req.user[update] = req.body[update]

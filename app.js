@@ -11,6 +11,23 @@ const formRouter = require('./routes/form')
 const userRouter = require('./routes/users')
 const responseRouter = require('./routes/response')
 const feedbackRouter = require('./routes/feedback')
+const message = require('./src/firebaseInit');
+
+// console.log(message);
+// var admin = require("firebase-admin");
+
+// var serviceAccount = require('./jobie-firebase.json');
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
+
+// const payload = {
+//   data: {
+//     key: 'hi'
+//   }
+// }
+// admin.messaging().sendToDevice(token, payload).then((res) => console.log(res)).catch((res) => console.log(res));
 
 const app = express()
 app.use(cookieParser())

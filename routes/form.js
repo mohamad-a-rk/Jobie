@@ -27,6 +27,8 @@ app.post('/forms', auth, async (req, res) => { // Create a new form
 
 
 app.get('/forms', async (req, res) => { // Get and search is
+    console.log(req)
+
     today = new Date()
     const sort = {}
     const search = {}
@@ -45,7 +47,7 @@ app.get('/forms', async (req, res) => { // Get and search is
     }
     if (req.query.place) {
 
-        search["location"] = `$or[ location.city: ${req.query.place} , location.country: ${req.query.place}]`
+        search["location"] = RegExp(` $or[ location.city: ${req.query.place} , location.country: ${req.query.place}]`)
     }
     if (req.query.profession) {
         search["field"] = req.query.profession
