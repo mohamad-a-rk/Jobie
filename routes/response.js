@@ -7,6 +7,8 @@ const app = express.Router()
 app.use(express.json())
 app.post('/response', async (req, res) => { // Create a new response
     {
+		console.log(req.body)
+		
         let response = new Response({
             ...req.body,
         })
