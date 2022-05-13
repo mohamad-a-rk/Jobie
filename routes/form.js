@@ -27,6 +27,7 @@ app.post('/forms', auth, async (req, res) => { // Create a new form
 
 
 app.get('/forms', async (req, res) => { // Get and search is
+
     today = new Date()
     const sort = {}
     const search = {}
@@ -35,7 +36,7 @@ app.get('/forms', async (req, res) => { // Get and search is
         sort[parts[0]] = parts[1] == 'asc' ? 1 : -1
     }
     if (req.query.owner) {
-		console.log(req.query.owner)
+        console.log(req.query.owner)
         search["owner"] = req.query.owner
     }
     if (req.query.jobType) {
@@ -44,11 +45,12 @@ app.get('/forms', async (req, res) => { // Get and search is
     if (req.query.title) {
         search["title"] = req.query.title
     }
-    // if (req.query.place) {
+    if (req.query.place) {
 
-
-    //     search["location"] = RegExp(`$or[ location.city: ${req.query.place} , location.country: ${req.query.place}]`)
-    // }
+        //     search["location"] = RegExp(`$or[ location.city: ${req.query.place} , location.country: ${req.query.place}]`)
+        // }
+        search["location"] = RegExp(` $or[ location.city: ${req.query.place} , location.country: ${req.query.place}]`)
+    }
     if (req.query.profession) {
         search["field"] = req.query.profession
     }

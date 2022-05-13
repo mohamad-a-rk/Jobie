@@ -137,6 +137,8 @@ app.patch('/users/me', auth, async (req, res) => { // Update user data
     return res.status(400).send()
   }
   try {
+
+    console.log(req.body.phone)
     updates.forEach((update) => {
 
       req.user[update] = req.body[update]
@@ -161,7 +163,7 @@ app.delete('/users/me', auth, async (req, res) => {
 })
 
 app.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
-  let buffer = await (await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }).toBuffer())
+  let buffer = (await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }).toBuffer())
 
   req.user.image = buffer;
   await req.user.save()

@@ -1,6 +1,10 @@
 const express = require('express')
 const Feedback = require('../src/models/feedback')
 const auth = require('../src/middleware/auth')
+const sendNotificationToClient = require('../src/notify');
+// const messaging = require('../src/firebaseInit');
+
+// console.log(messaging)
 const app = express.Router()
 
 app.use(express.json())
@@ -15,7 +19,18 @@ app.post('/feedback', auth, async (req, res) => { // Create a new feedback
             feedbacker: req.user._id
         })
         try {
+
             let value = await feedback.save()
+            // console.log(req.body)
+
+            const tokens = ['fZGoR5KWZmfAgEUdr1eOIf:APA91bFBRoK6Ve4PEzvq-ev16mQerXMREbe9mXWu9pj9vtNs_s5JAbIZe7z6Cad31AQnooV4etEbHPmqV0KRAFx10JZjElEQqFSDVPBMgpdNgWlKrMwUCY63Rtv4UD5y5Zjxvl4c6uzN'];
+            const notificationData = {
+                title: 'New message',
+                body: req.body,
+            };
+            sendNotificationToClient(tokens, notificationData);
+            console.log(notificationData)
+
             res.send(value)
         }
         catch (error) {

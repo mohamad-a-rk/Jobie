@@ -63,8 +63,10 @@ const FormSchema = new mongoose.Schema({
     }
 })
 
-FormSchema.pre('remove', async function (next) {  //
-    await Response.deleteMany({ form: this._id })
+FormSchema.pre('findOneAndDelete', async function (next) {  //
+    await Response.deleteMany({ form: this._conditions._id })
+    console.log(this._conditions._id)
+    console.log("Deleting")
     next()
 })
 FormSchema.virtual('responses', {

@@ -7,8 +7,8 @@ const app = express.Router()
 app.use(express.json())
 app.post('/response', async (req, res) => { // Create a new response
     {
-		console.log(req.body)
-		
+        console.log(req.body)
+
         let response = new Response({
             ...req.body,
         })
@@ -42,7 +42,7 @@ app.get('/response/me', auth, async (req, res) => {
             }
         })
 
-        console.log(req.user)
+        console.log(req.user.responses)
         res.send(req.user.responses)
     }
     catch (e) {
@@ -51,7 +51,7 @@ app.get('/response/me', auth, async (req, res) => {
 
     }
 })
-app.get('/response/form/:id', async (req, res) => { // Get a specific Response from a specific form 
+app.get('/response/form/:id', async (req, res) => { // Get Responses from a specific form 
     try {
         const id = req.params.id
         const value = await Response.find({ form: id })
