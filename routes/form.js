@@ -36,23 +36,7 @@ app.get('/forms', async (req, res) => { // Get and search is
         sort[parts[0]] = parts[1] == 'asc' ? 1 : -1
     }
     if (req.query.owner) {
-        console.log(req.query.owner)
-        search["owner"] = req.query.owner
-    }
-    if (req.query.jobType) {
-        search["jobType"] = req.query.jobType
-    }
-    if (req.query.title) {
-        search["title"] = req.query.title
-    }
-    if (req.query.place) {
-
-        //     search["location"] = RegExp(`$or[ location.city: ${req.query.place} , location.country: ${req.query.place}]`)
-        // }
-        search["location"] = RegExp(` $or[ location.city: ${req.query.place} , location.country: ${req.query.place}]`)
-    }
-    if (req.query.profession) {
-        search["field"] = req.query.profession
+        search["owner"] =  req.query.owner
     }
 
     try {
@@ -63,9 +47,28 @@ app.get('/forms', async (req, res) => { // Get and search is
             .skip(parseInt(req.query.skip))
             .sort(sort)
 
+        if (!req.query.title && !req.query.jobType && !req.query.profession && !req.query.place) {
+            res.send(forms)
+        } else {
+            const t = forms.filter((f) => {
+                if (req.query.title && f.title.toLowerCase().includes(req.query.title)) {
+                    return f;
+                }
+                if (req.query.jobType && f.jobType.toLowerCase().includes(req.query.jobType)) {
+                  
+                    return f;
+                }
+                if (req.query.profession && f.field.toLowerCase().includes(req.query.profession)) {
+                    return f;
+                }
+                if (req.query.place && (f.location.city.toLowerCase().includes(req.query.place) || f.location.country.toLowerCase().includes(req.query.place))) {
+                    return f;
+                }
 
+            })
 
-        res.send(forms)
+            res.send(t)
+        }
     }
     catch (e) {
         res.status(500).send()

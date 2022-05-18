@@ -80,21 +80,42 @@ app.get('/users', async (req, res) => { // Get all users
     if (req.query.userType) {
       search["userType"] = req.query.userType
     }
-    if (req.query.name) {
-      search["name"] = req.query.name
-    }
-    if (req.query.specialization) {
-      search["specialization"] = req.query.specialization
-    }
-    // if (req.query.search) {
-    //   let parts = req.query.search.split(':')
-    //   search[parts[0]] = "" + parts[1] //+ "/"
+    // if (req.query.name) {
+    //   search["name"] = req.query.name
+    // }
+    // if (req.query.specialization) {
+    //   search["specialization"] = req.query.specialization
     // }
     let value = await User.find({
       ...search
     })
 
-    res.send(value)
+    // console.log(req.query.userType, req.query.name, req.query.specialization, req.query.place)
+    if (!req.query.name && !req.query.specialization && !req.query.place) {
+      // console.log('wer')
+      res.send(value)
+    } else {
+      const t = value.filter((u) => {
+        // if (req.query.userType && u.userType.toLowerCase().includes(req.query.userType)) {
+        //   return u;
+        // }
+        if (req.query.name && u.name.toLowerCase().includes(req.query.name)) {
+          return u;
+        }
+        if (req.query.specialization && u.specialization && u.specialization.toLowerCase().includes(req.query.specialization)) {
+          return u;
+        }
+        // console.log(u.location)
+        if (req.query.place && u.location &&
+          (u.location.city.toLowerCase().includes(req.query.place) || u.location.country.toLowerCase().includes(req.query.place))) {
+          // console.log('done')
+          return u;
+        }
+      })
+
+      res.send(t)
+
+    }
   } catch (error) {
     res.status(500).send()
   }
