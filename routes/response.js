@@ -41,9 +41,26 @@ app.get('/response/me', auth, async (req, res) => {
                 }
             }
         })
+        const filter = Object.keys(req.query)[0];
+        const value = req.query[Object.keys(req.query)[0]];
+        // console.log(filter, value)
 
-        console.log(req.user.responses)
-        res.send(req.user.responses)
+        if (filter && value.trim() !== '') {
+            const t = req.user.responses.filter((r) => {
+                // console.log(r.form.location)
+
+                if (req.query.place && (r.form.location.city.toLowerCase().includes(req.query.place) || r.form.location.country.toLowerCase().includes(req.query.place))) {
+                    return r;
+                }
+
+                if (filter && r.form[filter] && r.form[filter].toLowerCase().includes(value)) {
+
+                    return r;
+                }
+            })
+            res.send(t)
+        }else res.send(req.user.responses)
+        
     }
     catch (e) {
         console.log(e)

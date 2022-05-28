@@ -126,10 +126,11 @@ app.get('/users/me', auth, async (req, res) => {
 })
 
 app.post('/users/logout', auth, async (req, res) => {
+  // console.log(req.token)
   try {
-    req.user.tokens = req.user.tokens.filter((token) => {
+    req.user.tokens = req.user.tokens.filter((token) => 
       token.token !== req.token
-    })
+    )
 
     await req.user.save()
     res.send()
@@ -188,7 +189,7 @@ app.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => 
 
   req.user.image = buffer;
   await req.user.save()
-  console.log('image', req.user.image)
+  // console.log('image', req.user.image)
   res.send(req.user.image)
 }, (error, req, res, next) => {
   // console.log(error)

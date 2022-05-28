@@ -51,19 +51,58 @@ app.get('/forms', async (req, res) => { // Get and search is
             res.send(forms)
         } else {
             const t = forms.filter((f) => {
-                if (req.query.title && f.title.toLowerCase().includes(req.query.title)) {
+
+                if (req.query.title && req.query.profession && req.query.place && 
+                    f.title.toLowerCase().includes(req.query.title) &&
+                    f.field.toLowerCase().includes(req.query.profession) &&
+                    (f.location.city.toLowerCase().includes(req.query.place) || f.location.country.toLowerCase().includes(req.query.place))
+                    ) {
                     return f;
                 }
-                if (req.query.jobType && f.jobType.toLowerCase().includes(req.query.jobType)) {
+                if (req.query.title && req.query.profession && !req.query.place && 
+                    f.title.toLowerCase().includes(req.query.title) &&
+                    f.field.toLowerCase().includes(req.query.profession)) {
+                    return f;
+                }
+                if (req.query.title && !req.query.profession && req.query.place && 
+                    f.title.toLowerCase().includes(req.query.title) &&
+                    (f.location.city.toLowerCase().includes(req.query.place) || f.location.country.toLowerCase().includes(req.query.place))
+                    ) {
+                    return f;
+                }
+                if (!req.query.title && req.query.profession && req.query.place && 
+                    f.field.toLowerCase().includes(req.query.profession) &&
+                    (f.location.city.toLowerCase().includes(req.query.place) || f.location.country.toLowerCase().includes(req.query.place))
+                    ) {
+                    return f;
+                }
+                if (req.query.title && !req.query.profession && !req.query.place && 
+                    f.title.toLowerCase().includes(req.query.title)) {
+                    return f;
+                }
+                if (!req.query.title && !req.query.profession && req.query.place && 
+                    (f.location.city.toLowerCase().includes(req.query.place) || f.location.country.toLowerCase().includes(req.query.place))
+                    ) {
+                    return f;
+                }
+                if (!req.query.title && req.query.profession && !req.query.place && 
+                    f.field.toLowerCase().includes(req.query.profession)) {
+                    return f;
+                }
+
+                // if (req.query.title && f.title.toLowerCase().includes(req.query.title)) {
+                //     return f;
+                // }
+                // // if (req.query.jobType && f.jobType.toLowerCase().includes(req.query.jobType)) {
                   
-                    return f;
-                }
-                if (req.query.profession && f.field.toLowerCase().includes(req.query.profession)) {
-                    return f;
-                }
-                if (req.query.place && (f.location.city.toLowerCase().includes(req.query.place) || f.location.country.toLowerCase().includes(req.query.place))) {
-                    return f;
-                }
+                // //     return f;
+                // // }
+                // if (req.query.profession && f.field.toLowerCase().includes(req.query.profession)) {
+                //     return f;
+                // }
+                // if (req.query.place && (f.location.city.toLowerCase().includes(req.query.place) || f.location.country.toLowerCase().includes(req.query.place))) {
+                //     return f;
+                // }
 
             })
 
